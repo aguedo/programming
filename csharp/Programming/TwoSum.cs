@@ -4,6 +4,25 @@ namespace Programming;
 
 public class TwoSum
 {
+    public static int[] TwoSumWithDictionary(int[] nums, int target)
+    {
+        var numIndexes = new Dictionary<int, int>();
+
+        for (int i = 0; i < nums.Length; i++)
+        {
+            int diff = target - nums[i];
+            int index = numIndexes.GetValueOrDefault(diff, -1);
+            if (index >= 0)
+            {
+                return new int[] { index, i };
+            }
+
+            numIndexes[nums[i]] = i;
+        }
+
+        throw new Exception("Target not found.");
+    }
+
     public static int[] TwoSumSorting(int[] nums, int target)
     {
         int[] indices = new int[nums.Length];
