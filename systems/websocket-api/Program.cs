@@ -17,10 +17,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseWebSockets();
 
-HashSet<WebSocket> _webSockets = [];
+HashSet<WebSocket> _webSockets = []; // TODO: fix concurrency.
 
 app.Map("/chat", async (HttpContext context) =>
 {
@@ -63,6 +62,12 @@ async Task Broadcast(string message, WebSocket source)
     var echoBytes = Encoding.UTF8.GetBytes(message);
     foreach (WebSocket webSocket in _webSockets)
     {
+        if (webSocket.State != WebSocketState.Open)
+        {
+            _webSockets.Remove(webSocket);
+            continue;
+        }
+
         if (webSocket != source)
         {
             await webSocket.SendAsync(new ArraySegment<byte>(echoBytes), WebSocketMessageType.Text, true, CancellationToken.None);
