@@ -2,6 +2,40 @@ namespace Programming;
 
 public class IntervalIntersection
 {
+    public int[][] IntervalIntersectionRefactored(int[][] firstList, int[][] secondList)
+    {
+        int fIndex = 0;
+        int sIndex = 0;
+        List<int[]> res = new List<int[]>();
+
+        while (fIndex < firstList.Length && sIndex < secondList.Length)
+        {
+            int fStart = firstList[fIndex][0];
+            int fEnd = firstList[fIndex][1];
+            int sStart = secondList[sIndex][0];
+            int sEnd = secondList[sIndex][1];
+
+            int start = Math.Max(fStart, sStart);
+            int end = Math.Min(fEnd, sEnd);
+
+            if (start <= end)
+            {
+                res.Add(new int[] { start, end });
+            }
+
+            if (fEnd < sEnd)
+            {
+                fIndex++;
+            }
+            else
+            {
+                sIndex++;
+            }
+        }
+
+        return res.ToArray();
+    }
+
     public int[][] IntervalIntersectionImp(int[][] firstList, int[][] secondList)
     {
         int fIndex = 0;
