@@ -4,6 +4,22 @@ namespace Programming;
 
 public class ToeplitzMatrix
 {
+    public bool IsToeplitzMatrix(int[][] matrix)
+    {
+        for (int row = 1; row < matrix.Length; row++)
+        {
+            for (int col = row; col < matrix[0].Length; col++)
+            {
+                if (matrix[row - 1][col - 1] != matrix[row][col])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public bool IsToeplitzMatrixLongIteration(int[][] matrix)
     {
         int cols = matrix[0].Length;
