@@ -1,6 +1,6 @@
 namespace Programming;
 
-public class MinimumWindowSubstringCheckingEachIteration
+public class MinimumWindowSubstring
 {
     public string MinWindow(string s, string t)
     {
@@ -19,6 +19,7 @@ public class MinimumWindowSubstringCheckingEachIteration
         int start = 0;
         int bestStart = 0;
         int bestEnd = -1;
+        int unbalancedCount = charMap.Count;
 
         for (int end = 0; end < s.Length; end++)
         {
@@ -27,10 +28,14 @@ public class MinimumWindowSubstringCheckingEachIteration
             {
                 count++;
                 charMap[c] = count;
+
+                if (count == 0)
+                {
+                    unbalancedCount--;
+                }
             }
 
-            // TODO: avoid using IsValidWindow
-            while (start <= end && IsValidWindow(charMap))
+            while (start <= end && unbalancedCount == 0)
             {
                 if (bestEnd < 0 || end - start < bestEnd - bestStart)
                 {
@@ -41,7 +46,13 @@ public class MinimumWindowSubstringCheckingEachIteration
                 char startC = s[start];
                 if (charMap.TryGetValue(startC, out int startCount))
                 {
-                    charMap[startC] = startCount - 1;
+                    if (startCount == 0)
+                    {
+                        unbalancedCount++;
+                    }
+
+                    startCount--;
+                    charMap[startC] = startCount;
                 }
 
                 start++;
@@ -54,18 +65,5 @@ public class MinimumWindowSubstringCheckingEachIteration
         }
 
         return s.Substring(bestStart, bestEnd - bestStart + 1);
-    }
-
-    private bool IsValidWindow(Dictionary<char, int> charMap)
-    {
-        foreach (int count in charMap.Values)
-        {
-            if (count < 0)
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
